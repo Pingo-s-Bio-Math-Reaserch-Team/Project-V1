@@ -1,16 +1,29 @@
-import numpy as numpy
-
+import Participant.py #might break depending on what file path you have, if broken just uh...just uh look at it, dosent work on colab
 class EncodedCases:
   #Use raw molecular call, ignore WHO text label if conflicting
   #Exclude sample if missing (required for subtype classification)
   def IDHMutationStatus(self, par):
-    print("")
+    if(par.values["IDH"] == None):
+      return None
+    p = par.deepcopy()
+    if(par.values["IDH"] == "mutant"):
+      p.values["IDH"] = 1
+    else:
+      p.values["IDH"] = 0
 
   #Binarize from beta value: threshold ≥ 0.30 = methylated
   #If MGMT data is missing, fill it in with whatever value appears most in the cohort, 
   #and mark those samples so we know they were filled in and not real measurements
   def MGMTMethylation(self, par):
-    print("")   
+    p = par.deepcopy()
+    if(par.values["MGMPT"] == None):
+      print("remind michael that he still has to do this part, and is just waiting to see what the data looks like")
+    elif(par.values["MGMT"] >= 0):
+      p.values["MGMT"] = 1
+    else:
+      p.values["MGMT"] = 0
+    
+    return p
 
   #Log2(FPKM+1) normalize; amplified = CNV≥2 OR FPKM ≥ 90th pct
   #Exclude sample from transcriptomic node if RNA-seq missing
@@ -31,4 +44,3 @@ class EncodedCases:
   #Use IDH status to infer if WHO label absent or ambiguous
   def WHOGrade(self, par):
     print("")
-
