@@ -140,9 +140,25 @@ class OTOutputs:
 
     
 
-p = Participant()
-p.test("mutant", None, 0, 0, 0)
-p.values["STATUS"] = "0"
-ec = EncodedCases()
+class input:
+    def __init__(self):
+      self.vals = []
+    
+    def infile(self):
+      file = open("data.txt")
+      self.head = file.readline().split()
+      
+      for line in file:
+          p = Participant()
+          vls = line.split()
+          for i in range(len(vls)):
+            p.values[self.head[i]] = vls[i]
+          self.vals.append(p)
+      return self.vals
+         
 
-print(ec.vitalStatus(p))
+
+
+i = input()
+
+print(i.infile()[1].values["PatientID"])
